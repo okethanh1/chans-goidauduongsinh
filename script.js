@@ -68,10 +68,29 @@ function initApp() {
     const bookingForm = document.getElementById('bookingForm');
     const popupOverlay = document.getElementById('popupOverlay');
     const closePopupBtn = document.getElementById('closePopupBtn');
-    const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbw7aSHgsyAjOyisu2gBPmipP2wbMr5OqIeIbVXaaweDV3g-hDxnUWXwS8K0znehFdwZ/exec?v=1';
-    
+
+    // Ưu tiên lấy endpoint từ config riêng để repo sạch hơn khi public.
+    const bookingEndpoint =
+        window.APP_CONFIG?.BOOKING_WEB_APP_URL
+        || window.BOOKING_WEB_APP_URL
+        || 'https://script.google.com/macros/s/AKfycbzXT4RwucXl62YKGyjD58QeTI9skwoPhkCVm2eLdO4WAPlShuWgcsFZJFKw5AaGT73s/exec';
+
     function openPopup() { popupOverlay?.classList.add('show'); }
     function closePopup() { popupOverlay?.classList.remove('show'); }
+
+    function getBookingPayload() {
+        return {
+            name: document.getElementById('name')?.value?.trim() || '',
+            phone: document.getElementById('phone')?.value?.trim() || '',
+            email: document.getElementById('email')?.value?.trim() || '',
+            gender: document.querySelector('input[name="gender"]:checked')?.value || '',
+            age: document.getElementById('age')?.value?.trim() || '',
+            service: document.getElementById('service')?.value || '',
+            date: document.getElementById('date')?.value || '',
+            time: document.getElementById('time')?.value || '',
+            note: document.getElementById('note')?.value?.trim() || ''
+        };
+    }
 
     bookingForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -83,20 +102,20 @@ function initApp() {
             submitBtn.innerHTML = 'Đang gửi...';
         }
 
-        const formData = {
-            name: document.getElementById('name')?.value?.trim() || '',
-            phone: document.getElementById('phone')?.value?.trim() || '',
-            email: document.getElementById('email')?.value?.trim() || '',
-            gender: document.querySelector('input[name="gender"]:checked')?.value || '',
-            age: document.getElementById('age')?.value?.trim() || '',
-            service: document.getElementById('service')?.value || '',
-            date: document.getElementById('date')?.value || '',
-            time: document.getElementById('time')?.value || '',
-            note: document.getElementById('note')?.value?.trim() || ''
-        };
+        const formData = getBookingPayload();
+
+        // Kiểm tra tối thiểu trước khi gửi
+        if (!formData.name || !formData.phone || !formData.service || !formData.date || !formData.time) {
+            alert('Vui lòng nhập đầy đủ các trường bắt buộc.');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+            return;
+        }
 
         try {
-            await fetch(googleScriptUrl, {
+            await fetch(bookingEndpoint, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {
@@ -105,6 +124,7 @@ function initApp() {
                 body: JSON.stringify(formData)
             });
 
+            // Với no-cors, không đọc được response; nếu request không throw thì coi như gửi xong.
             bookingForm.reset();
             openPopup();
         } catch (error) {
@@ -117,9 +137,42 @@ function initApp() {
             }
         }
     });
+
     closePopupBtn?.addEventListener('click', closePopup);
     popupOverlay?.addEventListener('click', (e) => {
         if (e.target === popupOverlay) closePopup();
     });
     window.closePopup = closePopup;
+
+    // Xử lý nút đặt lịch để cuộn và chọn dịch vụ
+    document.querySelectorAll('.btn[href="#booking"]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Lấy serviceId từ data-attribute
+            const serviceId = e.currentTarget.dataset.serviceId;
+            if (serviceId) {
+                const serviceSelect = document.getElementById('service');
+                if (serviceSelect) {
+                    serviceSelect.value = serviceId; // Tự động chọn dịch vụ
+                }
+            }
+
+            // Cuộn mượt đến phần đặt lịch
+            const bookingSection = document.getElementById('booking');
+            if (bookingSection) {
+                e.preventDefault(); // Ngăn hành vi anchor mặc định
+                bookingSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Tự động chọn dịch vụ nếu có serviceId trong URL ban đầu (cho trường hợp reload)
+    // Giữ lại logic này nếu người dùng refresh trang với hash parameter
+    const hash = window.location.hash;
+    if (hash.startsWith('#booking?service=')) {
+        const serviceIdFromUrl = hash.split('=')[1];
+        const serviceSelect = document.getElementById('service');
+        if (serviceSelect) {
+            serviceSelect.value = serviceIdFromUrl;
+        }
+    }
 }

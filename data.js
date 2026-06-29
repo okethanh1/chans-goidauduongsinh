@@ -108,7 +108,7 @@ const siteData = {
         ["⭐⭐⭐⭐⭐", "Gói VIP rất đáng đồng tiền bát gạo. 90 phút thư giãn tuyệt vời, massage cổ vai gáy rất chuyên nghiệp.", "Ngọc Anh", "Khách hàng quen", "N"]
     ],
     contacts: {
-        address: "51D Cao Thắng Phường Langbiang - Đà Lạt, Lâm Đồng",
+        address: "51B Cao Thắng Phường Langbiang - Đà Lạt, Lâm Đồng",
         phones: ["0786 766 382", "0909 123 456"],
         email: "chans.spa@gmail.com",
         facebook: "https://www.facebook.com/profile.php?id=61591101135954&mibextid=wwXIfr",

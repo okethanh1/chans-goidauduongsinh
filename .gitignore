@@ -1,0 +1,21 @@
+# System / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+
+# Node / frontend caches
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+.vscode/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Google Apps Script / misc
+*.tmp

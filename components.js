@@ -120,7 +120,7 @@ const renderPricing = (pricing) => {
                     <ul class="price-list">
                         ${basic.items.map(item => `<li><i class="fa-solid fa-check"></i> ${item}</li>`).join('')}
                     </ul>
-                    <a href="#booking" class="btn btn-price">Đặt lịch ngay</a>
+                    <a href="#booking" class="btn btn-price" data-service-id="co-ban">Đặt lịch ngay</a>
                 </article>
 
                 <article class="price-card ${pro.type}">
@@ -132,7 +132,7 @@ const renderPricing = (pricing) => {
                     <ul class="price-list">
                         ${pro.items.map(item => `<li><i class="fa-solid fa-check"></i> ${item}</li>`).join('')}
                     </ul>
-                    <a href="#booking" class="btn btn-price-featured">Đặt lịch ngay</a>
+                    <a href="#booking" class="btn btn-price-featured" data-service-id="chuyen-dung">Đặt lịch ngay</a>
                 </article>
 
                 <article class="price-card ${vip.type}">
@@ -150,7 +150,7 @@ const renderPricing = (pricing) => {
                             </div>
                         `).join('')}
                     </div>
-                    <a href="#booking" class="btn btn-price">Đặt lịch ngay</a>
+                    <a href="#booking" class="btn btn-price" data-service-id="${vip.type}">Đặt lịch ngay</a>
                 </article>
             </div>
         </div>
@@ -295,7 +295,7 @@ const renderContact = (contacts) => `
             </div>
             <div class="contact-grid">
                 <div class="contact-map">
-                    <iframe src="https://www.google.com/maps?q=${encodeURIComponent(contacts.address)}&output=embed" width="100%" height="400" style="border:0; border-radius: 16px;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://www.google.com/maps?q=${encodeURIComponent('51B Cao Thắng Phường Langbiang - Đà Lạt, Lâm Đồng')}&output=embed" width="100%" height="400" style="border:0; border-radius: 16px;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
                 <div class="contact-info-grid">
                     <div class="contact-card">
