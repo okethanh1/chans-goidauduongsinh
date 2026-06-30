@@ -1,13 +1,22 @@
+const escapeHtml = (value) => String(value ?? '')
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"')
+    .replace(/'/g, '&#39;');
+
+const escapeAttr = (value) => escapeHtml(value).replace(/`/g, '&#96;');
+
 const renderNav = (brand, nav) => `
     <nav id="navbar">
         <div class="nav-container container">
             <a href="#home" class="logo">
                 <div class="logo-circle">
-                    <img src="image/logo.JPG" alt="${brand.name} logo" class="logo-img">
+                    <img src="image/logo.JPG" alt="${escapeAttr(brand.name)} logo" class="logo-img">
                 </div>
                 <div class="logo-text">
-                    <span class="logo-name">${brand.name}</span>
-                    <span class="logo-sub">${brand.subtitle}</span>
+                    <span class="logo-name">${escapeHtml(brand.name)}</span>
+                    <span class="logo-sub">${escapeHtml(brand.subtitle)}</span>
                 </div>
             </a>
 
@@ -16,7 +25,7 @@ const renderNav = (brand, nav) => `
             </button>
 
             <ul class="nav-links" id="navLinks">
-                ${nav.map(item => `<li><a href="${item.href}">${item.label}</a></li>`).join('')}
+                ${nav.map(item => `<li><a href="${escapeAttr(item.href)}">${escapeHtml(item.label)}</a></li>`).join('')}
             </ul>
 
             <a href="#booking" class="btn-book-nav">Đặt lịch ngay</a>
@@ -24,18 +33,18 @@ const renderNav = (brand, nav) => `
     </nav>
 `;
 
-const renderHero = (heroSlides) => `
+const renderHero = (brand, heroSlides) => `
     <section id="home" class="hero">
         <div class="hero-slideshow">
             ${heroSlides.map((img, index) => `
-                <div class="slide ${index === 0 ? 'active' : ''}" style="background-image:url('${img}')"></div>
+                <div class="slide ${index === 0 ? 'active' : ''}" style="background-image:url('${escapeAttr(img)}')"></div>
             `).join('')}
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-content container">
             <div class="hero-logo">
                 <div class="hero-logo-circle">
-                    <img src="image/logo.JPG" alt="${brand.name} logo" class="logo-img">
+                    <img src="image/logo.JPG" alt="${escapeAttr(brand.name)} logo" class="logo-img">
                 </div>
             </div>
             <h1>Gội Đầu Dưỡng Sinh</h1>
@@ -63,9 +72,9 @@ const renderAbout = (about) => `
             <div class="about-grid">
                 ${about.map(item => `
                     <article class="about-card">
-                        <div class="about-icon"><i class="fa-solid ${item.icon}"></i></div>
-                        <h3>${item.title}</h3>
-                        <p>${item.desc}</p>
+                        <div class="about-icon"><i class="fa-solid ${escapeAttr(item.icon)}"></i></div>
+                        <h3>${escapeHtml(item.title)}</h3>
+                        <p>${escapeHtml(item.desc)}</p>
                     </article>
                 `).join('')}
             </div>
@@ -85,11 +94,11 @@ const renderProcess = (process) => `
                 ${process.map((step, index) => `
                     <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}">
                         <div class="timeline-content">
-                            <div class="timeline-number">${step.no}</div>
-                            <h3>${step.title}</h3>
-                            <p>${step.desc}</p>
+                            <div class="timeline-number">${escapeHtml(step.no)}</div>
+                            <h3>${escapeHtml(step.title)}</h3>
+                            <p>${escapeHtml(step.desc)}</p>
                         </div>
-                        <div class="timeline-icon"><i class="fa-solid ${step.icon}"></i></div>
+                        <div class="timeline-icon"><i class="fa-solid ${escapeAttr(step.icon)}"></i></div>
                     </div>
                 `).join('')}
             </div>
@@ -112,51 +121,51 @@ const renderPricing = (pricing) => {
             </div>
 
             <div class="pricing-grid">
-                <article class="price-card ${basic.type}">
-                    <div class="price-badge">${basic.name}</div>
-                    <div class="price-icon"><i class="fa-solid ${basic.icon}"></i></div>
-                    <div class="price-amount">${basic.price}</div>
-                    <div class="price-time"><i class="fa-regular fa-clock"></i> ${basic.time}</div>
+                <article class="price-card ${escapeAttr(basic.type)}">
+                    <div class="price-badge">${escapeHtml(basic.name)}</div>
+                    <div class="price-icon"><i class="fa-solid ${escapeAttr(basic.icon)}"></i></div>
+                    <div class="price-amount">${escapeHtml(basic.price)}</div>
+                    <div class="price-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(basic.time)}</div>
                     <ul class="price-list">
-                        ${basic.items.map(item => `<li><i class="fa-solid fa-check"></i> ${item}</li>`).join('')}
+                        ${basic.items.map(item => `<li><i class="fa-solid fa-check"></i> ${escapeHtml(item)}</li>`).join('')}
                     </ul>
                     <a href="#booking" class="btn btn-price" data-service-id="co-ban">Đặt lịch ngay</a>
                 </article>
 
-                <article class="price-card ${pro.type}">
+                <article class="price-card ${escapeAttr(pro.type)}">
                     <div class="price-ribbon">Phổ Biến</div>
-                    <div class="price-badge">${pro.name}</div>
-                    <div class="price-icon"><i class="fa-solid ${pro.icon}"></i></div>
-                    <div class="price-amount">${pro.price}</div>
-                    <div class="price-time"><i class="fa-regular fa-clock"></i> ${pro.time}</div>
+                    <div class="price-badge">${escapeHtml(pro.name)}</div>
+                    <div class="price-icon"><i class="fa-solid ${escapeAttr(pro.icon)}"></i></div>
+                    <div class="price-amount">${escapeHtml(pro.price)}</div>
+                    <div class="price-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(pro.time)}</div>
                     <ul class="price-list">
-                        ${pro.items.map(item => `<li><i class="fa-solid fa-check"></i> ${item}</li>`).join('')}
+                        ${pro.items.map(item => `<li><i class="fa-solid fa-check"></i> ${escapeHtml(item)}</li>`).join('')}
                     </ul>
                     <a href="#booking" class="btn btn-price-featured" data-service-id="chuyen-dung">Đặt lịch ngay</a>
                 </article>
 
-                <article class="price-card ${vip.type}">
-                    <div class="price-badge">${vip.name}</div>
-                    <div class="price-icon"><i class="fa-solid ${vip.icon}"></i></div>
-                    <div class="price-amount">${vip.price}</div>
-                    <div class="price-time"><i class="fa-regular fa-clock"></i> ${vip.time}</div>
+                <article class="price-card ${escapeAttr(vip.type)}">
+                    <div class="price-badge">${escapeHtml(vip.name)}</div>
+                    <div class="price-icon"><i class="fa-solid ${escapeAttr(vip.icon)}"></i></div>
+                    <div class="price-amount">${escapeHtml(vip.price)}</div>
+                    <div class="price-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(vip.time)}</div>
                     <div class="price-split">
                         ${vip.split.map(group => `
                             <div class="split-col">
-                                <h4>${group[0]}</h4>
+                                <h4>${escapeHtml(group[0])}</h4>
                                 <ul class="price-list">
-                                    ${group[1].map(item => `<li><i class="fa-solid fa-check"></i> ${item}</li>`).join('')}
+                                    ${group[1].map(item => `<li><i class="fa-solid fa-check"></i> ${escapeHtml(item)}</li>`).join('')}
                                 </ul>
                             </div>
                         `).join('')}
                     </div>
-                    <a href="#booking" class="btn btn-price" data-service-id="${vip.type}">Đặt lịch ngay</a>
+                    <a href="#booking" class="btn btn-price" data-service-id="${escapeAttr(vip.type)}">Đặt lịch ngay</a>
                 </article>
             </div>
         </div>
     </section>
 `;
-}
+};
 
 const renderBenefits = (benefits) => `
     <section id="benefits" class="section">
@@ -169,9 +178,9 @@ const renderBenefits = (benefits) => `
             <div class="benefits-grid">
                 ${benefits.map(item => `
                     <article class="benefit-card">
-                        <div class="benefit-icon">${item[0]}</div>
-                        <h3>${item[1]}</h3>
-                        <p>${item[2]}</p>
+                        <div class="benefit-icon">${escapeHtml(item[0])}</div>
+                        <h3>${escapeHtml(item[1])}</h3>
+                        <p>${escapeHtml(item[2])}</p>
                     </article>
                 `).join('')}
             </div>
@@ -189,13 +198,13 @@ const renderReviews = (reviews) => `
             <div class="reviews-grid">
                 ${reviews.map(item => `
                     <article class="review-card">
-                        <div class="review-stars">${item[0]}</div>
-                        <p>"${item[1]}"</p>
+                        <div class="review-stars">${escapeHtml(item[0])}</div>
+                        <p>"${escapeHtml(item[1])}"</p>
                         <div class="review-author">
-                            <div class="author-avatar">${item[4]}</div>
+                            <div class="author-avatar">${escapeHtml(item[4])}</div>
                             <div>
-                                <strong>${item[2]}</strong>
-                                <span>${item[3]}</span>
+                                <strong>${escapeHtml(item[2])}</strong>
+                                <span>${escapeHtml(item[3])}</span>
                             </div>
                         </div>
                     </article>
@@ -295,33 +304,33 @@ const renderContact = (contacts) => `
             </div>
             <div class="contact-grid">
                 <div class="contact-map">
-                    <iframe src="https://www.google.com/maps?q=${encodeURIComponent('51B Cao Thắng Phường Langbiang - Đà Lạt, Lâm Đồng')}&output=embed" width="100%" height="400" style="border:0; border-radius: 16px;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://www.google.com/maps?q=${encodeURIComponent(contacts.address)}&output=embed" width="100%" height="400" style="border:0; border-radius: 16px;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
                 <div class="contact-info-grid">
                     <div class="contact-card">
                         <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
                         <h4>Địa chỉ</h4>
-                        <p>${contacts.address}</p>
+                        <p>${escapeHtml(contacts.address)}</p>
                     </div>
                     <div class="contact-card">
                         <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
                         <h4>Điện thoại</h4>
-                        ${contacts.phones.map(phone => `<a href="tel:${phone.replace(/\s/g, '')}">${phone}</a>`).join('')}
+                        ${contacts.phones.map(phone => `<a href="tel:${escapeAttr(phone.replace(/\s/g, ''))}">${escapeHtml(phone)}</a>`).join('')}
                     </div>
                     <div class="contact-card">
                         <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
                         <h4>Email</h4>
-                        <a href="mailto:${contacts.email}">${contacts.email}</a>
+                        <a href="mailto:${escapeAttr(contacts.email)}">${escapeHtml(contacts.email)}</a>
                     </div>
                     <div class="contact-card">
                         <div class="contact-icon"><i class="fa-brands fa-facebook"></i></div>
                         <h4>Facebook</h4>
-                        <a href="${contacts.facebook}" target="_blank">Fanpage Chans</a>
+                        <a href="${escapeAttr(contacts.facebook)}" target="_blank">Fanpage Chans</a>
                     </div>
                     <div class="contact-card">
                         <div class="contact-icon"><i class="fa-solid fa-comment-dots"></i></div>
                         <h4>Zalo</h4>
-                        <a href="${contacts.zalo}" target="_blank">${contacts.phones[0]}</a>
+                        <a href="${escapeAttr(contacts.zalo)}" target="_blank">${escapeHtml(contacts.phones[0])}</a>
                     </div>
                 </div>
             </div>
@@ -336,11 +345,11 @@ const renderFooter = (brand, contacts) => `
                 <div class="footer-col">
                     <div class="footer-logo">
                         <div class="logo-circle">
-                            <img src="image/logo.JPG" alt="${brand.name} logo" class="logo-img">
+                            <img src="image/logo.JPG" alt="${escapeAttr(brand.name)} logo" class="logo-img">
                         </div>
                         <div class="logo-text">
-                            <span class="logo-name">${brand.name}</span>
-                            <span class="logo-sub">${brand.subtitle}</span>
+                            <span class="logo-name">${escapeHtml(brand.name)}</span>
+                            <span class="logo-sub">${escapeHtml(brand.subtitle)}</span>
                         </div>
                     </div>
                     <p>Chăm sóc tóc – Thư giãn cơ thể – Phục hồi năng lượng</p>
@@ -356,10 +365,10 @@ const renderFooter = (brand, contacts) => `
                 <div class="footer-col">
                     <h4>Liên hệ nhanh</h4>
                     <ul>
-                        <li><i class="fa-solid fa-phone"></i> ${contacts.phones[0]}</li>
-                        <li><i class="fa-solid fa-phone"></i> ${contacts.phones[1]}</li>
-                        <li><i class="fa-solid fa-envelope"></i> ${contacts.email}</li>
-                        <li><i class="fa-solid fa-location-dot"></i> ${contacts.address}</li>
+                        <li><i class="fa-solid fa-phone"></i> ${escapeHtml(contacts.phones[0])}</li>
+                        <li><i class="fa-solid fa-phone"></i> ${escapeHtml(contacts.phones[1])}</li>
+                        <li><i class="fa-solid fa-envelope"></i> ${escapeHtml(contacts.email)}</li>
+                        <li><i class="fa-solid fa-location-dot"></i> ${escapeHtml(contacts.address)}</li>
                     </ul>
                 </div>
             </div>
